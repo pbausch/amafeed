@@ -1,7 +1,7 @@
-# amafeed
+# Amafeed
 
 Generate Amazon search RSS feeds. Usage:
 
-  /amafeed?keyword=[keyword]
+	/amafeed?keyword=[keyword]
 
-Will return an RSS for books matching the keyword, sorted by date published (more or less).
+Will return an RSS feed for books matching the keyword, sorted by publication date (more or less).
