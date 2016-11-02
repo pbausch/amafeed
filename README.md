@@ -1,6 +1,6 @@
 # Amafeed
 
-Generate Amazon search RSS feeds. Usage:
+Generate Amazon (US) search RSS feeds. Usage:
 
 	/amafeed?keyword=[keyword]
 
