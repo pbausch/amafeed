@@ -1,0 +1,100 @@
+<html>
+<head>
+	<title>Amafeed</title>
+	<style>
+		body, h1 {
+			font-family: "Segoe UI",Helvetica,Arial,sans-serif;
+			color: #333;
+		}
+		body {
+			font-size: 1em;
+		}
+		h1 {
+			
+		    font-size: 2em;
+		    font-weight: 600;
+		    padding-bottom: .1em;
+		    border-bottom: 1px solid #eee;
+		}
+		.formRow {
+		    margin-bottom: 10px;
+		}
+		.lastRow {
+			margin-top: 25px;
+		}
+		.formElement {
+			margin-top: 3px;
+		}
+		.button {
+			background-color: #FF9B00;
+		    border-radius: 4px;
+		    font-size: 14px;
+		    line-height: normal;
+		    padding: 8px 16px;
+			cursor: pointer;
+		}
+	</style>
+</head>
+<body>
+	<h1>Amafeed</h1>
+	<form action="/amafeed" method="GET">
+		<div class="formRow">
+			<label for="keyword">Keyword</label>
+			<div class="formElement">
+				<input type="text" size="25" name="keyword" id="keyword">
+			</div>
+		</div>
+		<div class="formRow">
+			<label for="store">Store</label>
+			<div class="formElement">
+				<select name="store" id="store">
+					<option value="All">All Departments</option>
+					<option value="UnboxVideo">Amazon Instant Video</option>
+					<option value="Appliances">Appliances</option>
+					<option value="MobileApps">Apps & Games</option>
+					<option value="ArtsAndCrafts">Arts, Crafts & Sewing</option>
+					<option value="Automotive">Automotive</option>
+					<option value="Baby">Baby</option>
+					<option value="Beauty">Beauty</option>
+					<option value="Books">Books</option>
+					<option value="Music">CDs & Vinyl</option>
+					<option value="Wireless">Cell Phones & Accessories</option>
+					<option value="Fashion">Clothing, Shoes & Jewelry</option>
+					<option value="FashionBaby">Clothing, Shoes & Jewelry - Baby</option>
+					<option value="FashionBoys">Clothing, Shoes & Jewelry - Boys</option>
+					<option value="FashionGirls">Clothing, Shoes & Jewelry - Girls</option>
+					<option value="FashionMen">Clothing, Shoes & Jewelry - Men</option>
+					<option value="FashionWomen">Clothing, Shoes & Jewelry - Women</option>
+					<option value="Collectibles">Collectibles & Fine Arts</option>
+					<option value="PCHardware">Computers</option>
+					<option value="MP3Downloads">Digital Music</option>
+					<option value="Electronics">Electronics</option>
+					<option value="GiftCards">Gift Cards</option>
+					<option value="Grocery">Grocery & Gourmet Food</option>
+					<option value="HealthPersonalCare">Health & Personal Care</option>
+					<option value="HomeGarden">Home & Kitchen</option>
+					<option value="Industrial">Industrial & Scientific</option>
+					<option value="KindleStore">Kindle Store</option>
+					<option value="Luggage">Luggage & Travel Gear</option>
+					<option value="Magazines">Magazine Subscriptions</option>
+					<option value="Movies">Movies & TV</option>
+					<option value="MusicalInstruments">Musical Instruments</option>
+					<option value="OfficeProducts">Office Products</option>
+					<option value="LawnAndGarden">Patio, Lawn & Garden</option>
+					<option value="PetSupplies">Pet Supplies</option>
+					<option value="Pantry">Prime Pantry</option>
+					<option value="Software">Software</option>
+					<option value="SportingGoods">Sports & Outdoors</option>
+					<option value="Tools">Tools & Home Improvement</option>
+					<option value="Toys">Toys & Games</option>
+					<option value="VideoGames">Video Games</option>
+					<option value="Wine">Wine</option>
+				</select>
+			</div>
+		</div>
+		<div class="formRow lastRow">
+			<input type="submit" value="get feed" class="button">
+		</div>
+	</form>
+</body>
+</html>

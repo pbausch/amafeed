@@ -1,4 +1,5 @@
 var express = require('express');
+var fs = require('fs');
 var amazon = require('amazon-product-api');
 var RSS = require('rss');
 var url = require('url');
@@ -10,6 +11,11 @@ app.get('/amafeed', function(req, res) {
 	
 	if (queryData.keyword) {
 		
+		var amznStore = "Books";
+		if (queryData.store) {
+			amznStore = queryData.store;
+		}
+		
 		var client = amazon.createClient({
 		  awsTag: "onfocus",
 		  awsId: process.env.AWS_ID,
@@ -18,27 +24,33 @@ app.get('/amafeed', function(req, res) {
 
 		client.itemSearch({
 		  keywords: queryData.keyword,
-		  searchIndex: 'Books',
-		  responseGroup: 'ItemAttributes,Offers,Images',
-		  sort: 'daterank'
+		  searchIndex: amznStore,
+		  responseGroup: 'ItemAttributes,Offers,Images'
 		}).then(function(results){
 			var feed = new RSS({
-				title: queryData.keyword + ' books on Amazon',
-				description: 'Search results for the keyword ' + queryData.keyword + ' across books on Amazon.',
+				title: queryData.keyword + ' ' + amznStore.toLowerCase() + ' on Amazon',
+				description: 'Search results for the keyword ' + queryData.keyword + ' across ' + amznStore.toLowerCase() + ' on Amazon.',
 				site_url: "http://www.onfocus.com/amafeed/",
 				language: 'en',
 				ttl: '60'
 			});
 			var keys = Object.keys( results );
 			for( var i = 0,length = keys.length; i < length; i++ ) {
+				var img_html = ''; 
+				var item_details = '';
 			    var item = results[ keys[ i ] ];
 			 	var asin = item['ASIN'][0];
 			 	var url = item['DetailPageURL'][0];
 
 			 	var itemattr = item['ItemAttributes'][0];
 			 	var title = itemattr['Title'][0];
-			 	var author = itemattr['Author'][0];
-			 	var binding = itemattr['Binding'][0];
+
+				// Book only
+				if (amznStore == 'Books') {
+			 		var author = itemattr['Author'][0];
+			 		var binding = itemattr['Binding'][0];
+					item_details = 'by ' + author + ' (' + binding + ')<br />'
+				}
 
 			 	var price = 'price unknown';
 			 	if (item.hasOwnProperty('OfferSummary')) {
@@ -48,7 +60,6 @@ app.get('/amafeed', function(req, res) {
 					}
 			 	}
 
-				var img_html = '';
 			 	if (item.hasOwnProperty('LargeImage')) {
 				 	var image = item['LargeImage'][0];
 				 	var image_url = image['URL'][0];
@@ -59,7 +70,7 @@ app.get('/amafeed', function(req, res) {
 	
 				feed.item({
 					title: title,
-					description: img_html + 'by ' + author + ' (' + binding + ')<br />' + price,
+					description: img_html + item_details + price,
 					url: url
 				});
 			}
@@ -70,7 +81,14 @@ app.get('/amafeed', function(req, res) {
 		});
 
   	} else {
-		res.end("Need a keyword!");
+	    fs.readFile('index.html', function (err, data) {
+	        res.writeHead(200, {
+	            'Content-Type': 'text/html',
+	            'Content-Length': data.length
+	        });
+	        res.write(data);
+	        res.end();
+	    });
   	}
 });
 
