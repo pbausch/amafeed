@@ -2,9 +2,13 @@
 
 Generate Amazon (US) search RSS feeds. Usage:
 
-	/amafeed?keyword=[keyword]
+	/amafeed
 
-Will return an RSS feed for books matching the keyword, sorted by publication date (more or less).
+Will show a form where you can enter a keyword and select an Amazon department. Click 'get feed' to go to a URL like this:
+
+	/amafeed?keyword=[keyword]&store=[store]
+	
+This will be an RSS feed of the top 10 items matching that search.
 
 You'll need an Amazon API Key and Secret that you can set as environment variables, like so:
 
