@@ -5,25 +5,37 @@ var RSS = require('rss');
 var url = require('url');
 var parseResults = require('./parseresults.js');
 var app = express();
+var path = require('path');
 var xml;
 
+app.use('/js', express.static(path.join(__dirname, 'js')));
 app.get('/amafeed', function(req, res) {
 
 	var queryData = url.parse(req.url, true).query;
 	
 	if (queryData.keyword) {
 		var amznStore = "Books";
+		var amznSort = "relevancerank";
+		var amznSortBy = "Relevance";
 		if (queryData.store) {
 			amznStore = queryData.store;
 		}
-		var htmlPreview;
+		if (queryData.sort) {
+			amznSort = queryData.sort;
+		}
+		if (queryData.sortBy) {
+			amznSortBy = queryData.sortBy;
+		}
 		var feed = new RSS({
 			title: queryData.keyword + ' ' + amznStore.toLowerCase() + ' on Amazon',
 			description: 'Search results for the keyword ' + queryData.keyword + ' across ' + amznStore.toLowerCase() + ' on Amazon.',
 			site_url: "http://www.onfocus.com/amafeed/",
 			language: 'en',
-			ttl: '60'
+			ttl: '1440'
 		});
+		var htmlHead = '<html><body><h1>' + queryData.keyword + ' ' + amznStore.toLowerCase() + ' on Amazon</h1>';
+		htmlHead += '<p>Search results for the keyword ' + queryData.keyword + ' across ' + amznStore.toLowerCase() + ' on Amazon.</p>'
+		var htmlFoot = '</body></html>';
 		var client = amazon.createClient({
 		  awsTag: "onfocus",
 		  awsId: process.env.AWS_ID,
@@ -32,6 +44,7 @@ app.get('/amafeed', function(req, res) {
 		client.itemSearch({
 		  keywords: queryData.keyword,
 		  searchIndex: amznStore,
+		  sort: amznSort,
 		  responseGroup: 'ItemAttributes,Offers,Images'
 		}).then(function(results){
 			var items = parseResults(results);
@@ -39,13 +52,13 @@ app.get('/amafeed', function(req, res) {
 				res.writeHead(200, {
 		            'Content-Type': 'text/html'
 		        });
-				res.write("<html><body>");
+				res.write(htmlHead);
 				for (var i = 0; i < items.length; i++) {
-					res.write("<h2>" + items[i].title + "</h2>");
+					res.write("<h3><a href='"+ items[i].link +"'>" + items[i].title + "</a></h3>");
 					res.write("<p>" + items[i].description + "</p>");
 					res.write("<br/ >");
 				}
-				res.write("</body></html>");
+				res.write(htmlFoot);
 		        res.end();
 			}
 			else {

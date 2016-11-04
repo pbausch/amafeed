@@ -1,53 +1,23 @@
 <html>
 <head>
-	<title>Amafeed</title>
-	<style>
-		body, h1 {
-			font-family: "Segoe UI",Helvetica,Arial,sans-serif;
-			color: #333;
-		}
-		body {
-			font-size: 1em;
-		}
-		h1 {
-			
-		    font-size: 2em;
-		    font-weight: 600;
-		    padding-bottom: .1em;
-		    border-bottom: 1px solid #eee;
-		}
-		.formRow {
-		    margin-bottom: 10px;
-		}
-		.lastRow {
-			margin-top: 25px;
-		}
-		.formElement {
-			margin-top: 3px;
-		}
-		.button {
-			background-color: #FF9B00;
-		    border-radius: 4px;
-		    font-size: 14px;
-		    line-height: normal;
-		    padding: 8px 16px;
-			cursor: pointer;
-		}
-	</style>
+	<title>Amazon Feed Generator</title>
+	<script src="/js/amafeed.js" type="text/javascript"></script>
 </head>
-<body>
-	<h1>Amafeed</h1>
-	<form action="/amafeed" method="GET">
+<body id="amafeed" onload="setsort();">
+	<h1>Amazon Feed Generator</h1>
+	<p>Track good stuff with Amazon.com!</p>
+	<h2>Create a Feed</h2>
+	<form action="/amafeed" method="GET" onsubmit="return verify();">
 		<div class="formRow">
-			<label for="keyword">Keyword</label>
+			<label for="keyword"><span class="number">1</span> Enter a Keyword</label>
 			<div class="formElement">
 				<input type="text" size="25" name="keyword" id="keyword">
 			</div>
 		</div>
 		<div class="formRow">
-			<label for="store">Store</label>
+			<label for="store"><span class="number">2</span> Choose a Store</label>
 			<div class="formElement">
-				<select name="store" id="store">
+				<select name="store" id="store" onchange="setsort();">
 					<option value="All">All Departments</option>
 					<option value="UnboxVideo">Amazon Instant Video</option>
 					<option value="Appliances">Appliances</option>
@@ -92,9 +62,26 @@
 				</select>
 			</div>
 		</div>
-		<div class="formRow lastRow">
-			<input type="submit" value="get feed" class="button">
+		<div class="formRow">
+			<label for="sort"><span class="number">5</span> Choose a Sort</label>
+			<div class="frmElement">
+				<select name="sort" id="sort" disabled="true" onchange="setlabel();">
+					<option value="relevance">No Sort Available</option>
+				</select>
+			</div>
 		</div>
+		<div class="formRow lastRow">
+			<label for="create"><span class="number">4</span> Create the Feed</label>
+			<div class="formElement">
+				<input type="submit" value="Get Feed Preview" class="button" id="create">
+			</div>
+		</div>
+		<input type="hidden" value="1" name="preview">
+		<input type="hidden" name="sortBy" value="Best Match" />
 	</form>
+	<h2>Feed Examples</h2>
+	<p></p>
+	<h2>Help</h2>
+	<p></p>
 </body>
 </html>
