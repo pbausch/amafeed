@@ -33,7 +33,11 @@ app.get('/amafeed', function(req, res) {
 			language: 'en',
 			ttl: '1440'
 		});
-		var htmlHead = '<html><body><h1>' + queryData.keyword + ' ' + amznStore.toLowerCase() + ' on Amazon</h1>';
+		var feedUrl = '/amafeed?keyword=' + queryData.keyword;
+		feedUrl += '&store=' + amznStore;
+		feedUrl += '&sort=' + amznSort;
+		feedUrl += '&sortBy=' + amznSortBy;
+		var htmlHead = '<html><body><h1>Feed Preview</h1><p>Here\'s a preview of your feed. Here is the <a href="'+ feedUrl +'">feed URL</a>.</p><h2>' + queryData.keyword + ' ' + amznStore.toLowerCase() + ' on Amazon</h2>';
 		htmlHead += '<p>Search results for the keyword ' + queryData.keyword + ' across ' + amznStore.toLowerCase() + ' on Amazon.</p>'
 		var htmlFoot = '</body></html>';
 		var client = amazon.createClient({
