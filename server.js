@@ -86,11 +86,11 @@ app.get('/amafeed', function(req, res) {
 		var feed = new RSS({
 			title: feedTitle,
 			description: feedDescription,
-			site_url: "http://www.onfocus.com/amafeed/",
+			site_url: "https://www.onfocus.com/amafeed/",
 			language: 'en',
 			ttl: '1440'
 		});
-		var feedUrl = '/amafeed?keyword=' + queryData.keyword;
+		var feedUrl = 'http://amafeed.onfocus.com/?keyword=' + queryData.keyword;
 		feedUrl += '&store=' + escape(amznStore);
 		feedUrl += '&sort=' + escape(amznSort);
 		feedUrl += '&sortBy=' + escape(amznSortBy);
