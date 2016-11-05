@@ -117,7 +117,7 @@ function setsort() {
 	var selopts = document.forms[0].sort;
 	var idx = sel[sel.selectedIndex].value;
 	if (!idx) return;
-	if (idx == 'Blended') {
+	if (idx == 'All') {
 		selopts.options.length = 0;
 		selopts.options[0] = new Option('No Sort Available','No Sort Available');
 		selopts.disabled = true;
