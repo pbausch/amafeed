@@ -33,6 +33,7 @@ module.exports = function (results) {
 	 	if (item.hasOwnProperty('LargeImage')) {
 		 	var image = item['LargeImage'][0];
 		 	var image_url = image['URL'][0];
+			image_url = image_url.replace("http://ecx.images-amazon.com/","https://images-eu.ssl-images-amazon.com/");
 		 	var image_width = image['Width'][0]['_'];
 		 	var image_height = image['Height'][0]['_'];
 			img_html = '<a href="'+ url +'"><img src="'+ image_url +'" width="'+ image_width +'" height="'+ image_height +'" alt="amazon book image" border="0" /></a><br /><br />';
