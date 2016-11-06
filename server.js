@@ -103,7 +103,7 @@ app.get('/amafeed', function(req, res) {
 		feedUrl += '&sort=' + escape(amznSort);
 		feedUrl += '&sortBy=' + escape(amznSortBy);
 		var htmlHead = fs.readFileSync(path.join(__dirname, '/templates') + '/onfocus-header.html');
-		htmlHead += '<h2>Feed Preview</h2><div class="post" style="margin-top:18px;"><p>Here\'s a preview of your feed. You can subscribe with this <a href="'+ feedUrl +'">feed URL</a>.<br /><br /><div class="formRow"><label for="sort"><span class="number">5</span> Copy the feed URL and paste into your newsreader</label><div class="formElement"><textarea class="txtFeed">'+ feedUrl +'</textarea></div></div>Not what you were after? You can <a href="/amafeed">go back and try again</a>.</p></div><h2 class="archive-title">' + feedTitle +'</h2><div class="post">';
+		htmlHead += '<h2>Feed Preview</h2><div class="post" style="margin-top:18px;"><p>Here\'s a preview of your feed. You can subscribe with this <a href="'+ feedUrl +'">feed URL</a>.<br /><br /><div class="formRow"><label for="sort"><span class="number">5</span> Copy the feed URL and paste into your newsreader</label><div class="formElement"><textarea class="txtFeed" onclick="this.focus();this.select()" readonly="readonly">'+ feedUrl +'</textarea></div></div>Not what you were after? You can <a href="/amafeed">go back and try again</a>.</p></div><h2 class="archive-title">' + feedTitle +'</h2><div class="post">';
 		htmlHead += '<p>'+ feedDescription + '</p><br /><br />';
 		var htmlFoot = "</div></div>" + fs.readFileSync(path.join(__dirname, '/templates') + '/onfocus-footer.html');
 		var client = amazon.createClient({
