@@ -36,7 +36,15 @@ String.prototype.capitalizeFirstLetter = function() {
     return this.charAt(0).toUpperCase() + this.slice(1);
 }
 
-app.use('/js', express.static(path.join(__dirname, 'js')));
+app.get('/amafeed.js', function(req, res) {
+	var js = fs.readFileSync(path.join(__dirname, '/') + 'amafeed.js');
+    res.writeHead(200, {
+        'Content-Type': 'text/javascript'
+    });
+    res.write(js);
+    res.end();
+});
+
 app.get('/amafeed', function(req, res) {
 
 	var queryData = url.parse(req.url, true).query;
