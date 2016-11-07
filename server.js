@@ -45,6 +45,15 @@ app.get('/amafeed/js/amafeed.js', function(req, res) {
     res.end();
 });
 
+app.get('/amafeed/js/analytics.js', function(req, res) {
+	var js = fs.readFileSync(path.join(__dirname, '/js') + '/analytics.js');
+    res.writeHead(200, {
+        'Content-Type': 'text/javascript'
+    });
+    res.write(js);
+    res.end();
+});
+
 app.get('/amafeed', function(req, res) {
 
 	var queryData = url.parse(req.url, true).query;
