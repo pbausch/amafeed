@@ -140,6 +140,7 @@ app.get('/amafeed', function(req, res) {
 						htmlOut += items[i].description;
 						htmlOut += "</div>";
 					}
+					htmlOut += htmlFoot;
 					callback(htmlOut);
 				}
 				else {
