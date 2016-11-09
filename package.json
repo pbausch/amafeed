@@ -1,12 +1,13 @@
 {
-  "name"         : "amafeed",
-  "version"      : "0.0.1",
-  "description"  : "Amazon RSS feeds",
-  "main"         : "server.js",
-  "author"       : "Paul Bausch",
-  "dependencies" : {
-    "amazon-product-api"    : "latest",
-    "rss"        : "latest",
-    "express"    : "latest"
+  "name": "amafeed",
+  "version": "0.0.1",
+  "description": "Amazon RSS feeds",
+  "main": "server.js",
+  "author": "Paul Bausch",
+  "dependencies": {
+    "amazon-product-api": "latest",
+    "rss": "latest",
+    "express": "latest",
+    "Simple-Cache": "latest"
   }
 }
