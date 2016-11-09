@@ -26,4 +26,4 @@ Responses are cached to disk so you'll need to clear the cache periodically to g
 
 	find [app directory]/cache/ -type f -mmin +60 -delete
 
-This will delete all cache files every hour. Adjust `-mmin` to set it higher or lower.
+This will delete all cache files every hour. Adjust `-mmin` to set change the frequency.
