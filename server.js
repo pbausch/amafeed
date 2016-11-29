@@ -10,6 +10,7 @@ var cache = require('Simple-Cache').SimpleCache(path.join(__dirname, '/cache'), 
 var crypto = require('crypto');
 var xml;
 
+// Dumps arrays. Helps with debugging.
 function mydump(arr,level) {
     var dumped_text = "";
     if(!level) level = 0;
@@ -34,10 +35,12 @@ function mydump(arr,level) {
     return dumped_text;
 }
 
+
 String.prototype.capitalizeFirstLetter = function() {
     return this.charAt(0).toUpperCase() + this.slice(1);
 }
 
+// Client JS with form functions
 app.get('/amafeed/js/amafeed.js', function(req, res) {
 	var js = fs.readFileSync(path.join(__dirname, '/js') + '/amafeed.js');
     res.writeHead(200, {
@@ -47,6 +50,7 @@ app.get('/amafeed/js/amafeed.js', function(req, res) {
     res.end();
 });
 
+// Client JS with anayltics code
 app.get('/amafeed/js/analytics.js', function(req, res) {
 	var js = fs.readFileSync(path.join(__dirname, '/js') + '/analytics.js');
     res.writeHead(200, {
@@ -56,6 +60,47 @@ app.get('/amafeed/js/analytics.js', function(req, res) {
     res.end();
 });
 
+// Gets Amazon categories JSON
+app.get('/amafeed/nodes', function(req, res) {
+	var queryData = url.parse(req.url, true).query;
+	var contentType = "text/html";
+	
+	var queryMD5 = crypto.createHash('md5').update(req.url).digest("hex");
+	
+	cache.get(queryMD5, function(callback) {
+		if (queryData.rootId) {
+			var client = amazon.createClient({
+			  awsTag: "onfocus",
+			  awsId: process.env.AWS_ID,
+			  awsSecret: process.env.AWS_SECRET
+			});
+			var searchParams;
+			searchParams = {
+			  browseNodeId: queryData.rootId,
+			  responseGroup: 'BrowseNodeInfo'
+			};
+			client.browseNodeLookup(searchParams).then(function(results){
+				var nodes = results[0]['Children'][0]['BrowseNode'];
+				callback(JSON.stringify(nodes,0));
+			});
+		}
+		else {
+			res.writeHead(200, {
+	            'Content-Type': contentType
+	        });
+	        res.write("Sorry, need a root browseNode id.");
+	        res.end();
+		}
+	}).fulfilled(function(data) {
+        res.writeHead(200, {
+            'Content-Type': contentType
+        });
+		res.end(data);
+	});
+	
+});
+
+// Where the feed or html preview are assembled
 app.get('/amafeed', function(req, res) {
 
 	var queryData = url.parse(req.url, true).query;
@@ -73,6 +118,8 @@ app.get('/amafeed', function(req, res) {
 			var amznStore = "Books";
 			var amznSort = "relevancerank";
 			var amznSortBy = "Relevance";
+			var amznCat = 0;
+			var amznCategory = "Any";
 			if (queryData.store) {
 				amznStore = queryData.store;
 			}
@@ -82,11 +129,26 @@ app.get('/amafeed', function(req, res) {
 			if (queryData.sortBy) {
 				amznSortBy = queryData.sortBy;
 			}
+			if (queryData.cat) {
+				amznCat = queryData.cat;
+			}
+			if (queryData.category) {
+				amznCategory = queryData.category;
+			}
 			var searchParams;
 			if (amznStore == "All") {
 				searchParams = {
 				  keywords: queryData.keyword,
 				  searchIndex: amznStore,
+				  responseGroup: 'ItemAttributes,Offers,Images'
+				};
+			}
+			else if (amznCat > 0) {
+				searchParams = {
+				  keywords: queryData.keyword,
+				  searchIndex: amznStore,
+				  browseNode: amznCat,
+				  sort: amznSort,
 				  responseGroup: 'ItemAttributes,Offers,Images'
 				};
 			}
@@ -108,7 +170,10 @@ app.get('/amafeed', function(req, res) {
 				feedDescription += 'all departments';
 			}
 			else {
-				feedDescription += amznStore.toLowerCase(); 
+				if (amznCategory !== 'Any') {
+					feedDescription += 'the ' + amznCategory + ' category in ';
+				}
+				feedDescription += amznStore; 
 			}
 			feedDescription += ' on Amazon.';
 			var feed = new RSS({
@@ -122,8 +187,10 @@ app.get('/amafeed', function(req, res) {
 			feedUrl += '&store=' + escape(amznStore);
 			feedUrl += '&sort=' + escape(amznSort);
 			feedUrl += '&sortBy=' + escape(amznSortBy);
+			feedUrl += '&cat=' + escape(amznCat);
+			feedUrl += '&category=' + escape(amznCategory);
 			var htmlHead = fs.readFileSync(path.join(__dirname, '/templates') + '/onfocus-header.html');
-			htmlHead += '<h2>Feed Preview</h2><div class="post" style="margin-top:18px;"><p>Here\'s a preview of your feed. You can subscribe with this <a href="'+ feedUrl +'">feed URL</a>.<br /><br /><div class="formRow"><label for="sort"><span class="number">5</span> Copy the feed URL and paste into your newsreader</label><div class="formElement"><textarea class="txtFeed" onclick="this.focus();this.select()" readonly="readonly">'+ feedUrl +'</textarea></div></div>Not what you were after? You can <a href="/amafeed">go back and try again</a>.</p></div><h2 class="archive-title">' + feedTitle +'</h2><div class="post">';
+			htmlHead += '<h2>Feed Preview</h2><div class="post" style="margin-top:18px;"><p>Here\'s a preview of your feed. You can subscribe with this <a href="'+ feedUrl +'">feed URL</a>.<br /><br /><div class="formRow"><label for="sort"><span class="number">6</span> Copy the feed URL and paste into your newsreader</label><div class="formElement"><textarea class="txtFeed" onclick="this.focus();this.select()" readonly="readonly">'+ feedUrl +'</textarea></div></div>Not what you were after? You can <a href="/amafeed">go back and try again</a>.</p></div><h2 class="archive-title">' + feedTitle +'</h2><div class="post">';
 			htmlHead += '<p>'+ feedDescription + '</p><br /><br />';
 			var htmlFoot = "</div></div>" + fs.readFileSync(path.join(__dirname, '/templates') + '/onfocus-footer.html');
 			var client = amazon.createClient({

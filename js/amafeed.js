@@ -1,5 +1,6 @@
 var sort = new Array();
 var desc = new Array();
+var node = new Array();
 
 desc['-age-min'] = 'Age: high to low';
 desc['albumrank'] = 'Album: A to Z';
@@ -112,15 +113,59 @@ sort['Toys'] = new Array('-age-min','-price','pmrank','price','salesrank','title
 sort['VideoGames'] = new Array('-price','pmrank','price','salesrank','titlerank');
 sort['Wine'] = new Array('-price','featured','price','relevancerank','reviewrank','reviewscore');
 
+node['UnboxVideo'] = 2858778011;
+node['Appliances'] = 2619526011;
+node['MobileApps'] = 2350150011;
+node['ArtsAndCrafts'] = 2617942011;
+node['Automotive'] = 15690151;
+node['Baby'] = 165797011;
+node['Beauty'] = 11055981;
+node['Books'] = 1000;
+node['Music'] = 301668;
+node['Wireless'] = 2335753011;
+node['Fashion'] = 7141124011;
+node['FashionBaby'] = 7147444011;
+node['FashionBoys'] = 7147443011;
+node['FashionGirls'] = 7147442011;
+node['FashionMen'] = 7147441011;
+node['FashionWomen'] = 7147440011;
+node['Collectibles'] = 4991426011;
+node['PCHardware'] = 541966;
+node['MP3Downloads'] = 624868011;
+node['Electronics'] = 493964;
+node['GiftCards'] = 2864120011;
+node['Grocery'] = 16310211;
+node['HealthPersonalCare'] = 3760931;
+node['HomeGarden'] = 1063498;
+node['Industrial'] = 16310161;
+node['KindleStore'] = 133141011;
+node['Luggage'] = 9479199011;
+node['Magazines'] = 599872;
+node['Movies'] = 2625374011;
+node['MusicalInstruments'] = 11965861;
+node['OfficeProducts'] = 1084128;
+node['LawnAndGarden'] = 3238155011;
+node['PetSupplies'] = 2619534011;
+node['Pantry'] = 0;
+node['Software'] = 409488;
+node['SportingGoods'] = 3375301;
+node['Tools'] = 468240;
+node['Toys'] = 165795011;
+node['VideoGames'] = 11846801;
+node['Wine'] = 2983386011;
+
 function setsort() {
 	var sel = document.forms[0].store;
 	var selopts = document.forms[0].sort;
+	var selcat = document.forms[0].cat;
 	var idx = sel[sel.selectedIndex].value;
 	if (!idx) return;
 	if (idx == 'All') {
 		selopts.options.length = 0;
-		selopts.options[0] = new Option('No Sort Available','No Sort Available');
+		selopts.options[0] = new Option('---','---');
 		selopts.disabled = true;
+		selcat.options.length = 0;
+		selcat.options[0] = new Option('Any','0');
 		return;
 	} else {
 		selopts.disabled = false;
@@ -137,6 +182,38 @@ function setsort() {
 	}
 	sortSelect(selopts);
 	setSelect(selopts);
+	setCat(node[idx]);
+}
+
+function setCat(node) {
+	var selcat = document.forms[0].cat;
+	
+	if (node == 0) {
+		selcat.options.length = 0;
+		selcat.options[0] = new Option('Any','0');
+		return;
+	}
+	
+	var xhr = new XMLHttpRequest();
+	xhr.open('GET', '/amafeed/nodes?rootId=' + node, true);
+	xhr.onload = function(e) {
+	  if (this.status == 200) {
+	      selcat.disabled = false;
+		  selcat.options.length = 0;
+		  var results = JSON.parse(xhr.responseText);
+		  selcat.options[0] = new Option('Any',0);
+		  for(var i=0;i<results.length;i++) {
+			var browseNodeId = results[i].BrowseNodeId[0];
+			var browseName = results[i].Name[0];
+			selcat.options[(i+1)] = new Option(browseName,browseNodeId);
+		  }
+	  }
+	  else {
+		selcat.options.length = 0;
+		selcat.options[0] = new Option('Any','0');
+	  }
+	};
+	xhr.send();
 }
 
 function setlabel() {
@@ -145,6 +222,14 @@ function setlabel() {
 	var idx = sel[sel.selectedIndex].value;
 	if (!idx) return;
 	hdnsrt.value = desc[idx].toLowerCase();
+}
+
+function setcatlabel() {
+	var sel = document.forms[0].cat;
+	var hdnsrt = document.forms[0].category;
+	var idx = sel[sel.selectedIndex].text;
+	if (!idx) return;
+	hdnsrt.value = idx;
 }
 
 function setpslabel() {

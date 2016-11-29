@@ -63,21 +63,30 @@
 			</div>
 		</div>
 		<div class="formRow">
-			<label for="sort"><span class="number">3</span> Choose a Sort</label>
+			<label for="cat"><span class="number">3</span> Choose a Category</label>
+			<div class="formElement">
+				<select name="cat" id="cat" onchange="setcatlabel();">
+					<option value="0">Any</option>
+				</select>
+			</div>
+		</div>
+		<div class="formRow">
+			<label for="sort"><span class="number">4</span> Choose a Sort</label>
 			<div class="formElement">
 				<select name="sort" id="sort" disabled="true" onchange="setlabel();">
-					<option value="relevance">No Sort Available</option>
+					<option value="relevance">---</option>
 				</select>
 			</div>
 		</div>
 		<div class="formRow lastRow">
-			<label for="create"><span class="number">4</span> Preview the Feed</label>
+			<label for="create"><span class="number">5</span> Preview the Feed</label>
 			<div class="formElement">
 				<input type="submit" value="Get Feed Preview" class="btn" id="create">
 			</div>
 		</div>
 		<input type="hidden" value="1" name="preview">
 		<input type="hidden" name="sortBy" value="Best Match" />
+		<input type="hidden" name="category" value="Any" />
 	</form>
 	</div>
 	</div>
