@@ -183,7 +183,7 @@ app.get('/amafeed', function(req, res) {
 				language: 'en',
 				ttl: '1440'
 			});
-			var feedUrl = 'http://amafeed.onfocus.com/?keyword=' + queryData.keyword;
+			var feedUrl = 'http://amafeed.onfocus.com/?keyword=' + escape(queryData.keyword);
 			feedUrl += '&store=' + escape(amznStore);
 			feedUrl += '&sort=' + escape(amznSort);
 			feedUrl += '&sortBy=' + escape(amznSortBy);
